@@ -1,0 +1,565 @@
+1 zenr=0:zenf=1001
+2 GOSUB 14160 
+10 fi=1:DIM ligne$(1001)  
+20 u=6:uu=1:ii=1
+30 DIM l$(80)
+40 INK 0,26:INK 1,0:BORDER 13
+50 MODE 2
+60 PRINT "~GENERALE ASSEMBLEUR Z80~ By Moi And Lui"        
+70 WINDOW 1,80,2,25:LOCATE 1,25
+80 t=1
+81 IF 70=t THEN 90 ELSE IF MID$(ligne$(ii),t,1)="" THEN l$(t+6)=CHR$(32) :t=t+1:GOTO 81 ELSE l$(t+6)=MID$(ligne$(ii),t,1):t=t+1:GOTO 81 
+90 PAPER 1:PEN 0:PRINT USING"#####";ii;:PAPER 0:PEN 1:PRINT">";STRING$(80-7," ")
+91 LOCATE 7,24:PRINT ligne$(ii)   
+100 EVERY 25,1 GOSUB 260  
+110 a$=INKEY$:
+120 IF u<>6 THEN LOCATE u,24:PRINT l$(u): 
+130 LOCATE u+1,24:PRINT h$;l$(u+1);h$
+140 IF a$="" THEN 110   
+150 IF ASC(a$)=13 THEN 230    
+160 IF ASC(a$)=127 THEN 300
+170 IF ASC(a$)=242 THEN 320 
+180 IF ASC(a$)=243 THEN 340
+190 IF ASC(a$)<32 OR ASC(a$)>126 THEN 110
+200 u=u+1:IF u>=75 THEN SOUND 1,400,10:u=74:GOTO 110 
+210 LOCATE u,24:PRINT a$;
+220 l$(u)=a$:GOTO 110
+230 lign$="":ff=6:e=0  
+231 ff=ff+1:IF ff=68 THEN 240 
+232 IF l$(ff)=" " AND e=0 THEN 231 ELSE lign$=lign$+l$(ff):e=1:GOTO 231  
+240 LOCATE u+1,24:PRINT l$(u+1)
+250 u=6:lign$=LOWER$(lign$):GOTO 400    
+260 IF fi=2 THEN h$="":fi=fi+1 
+270 IF fi=1 THEN h$="":fi=fi+1
+280 IF fi=3 THEN fi=1  
+290 RETURN
+300 u=u-1:IF u<6  THEN SOUND 1,400,10:u=u+1 :GOTO 110:ELSE u=u+1  
+310 LOCATE u,24:PRINT" ":LOCATE u+1,24:PRINT l$(u+1):l$(u)=" ":u=u-1:GOTO 110
+320 u=u-1:IF u<6  THEN SOUND 1,400,10:u=u+1 :GOTO 110:ELSE u=u+1   
+330 LOCATE u+1,24:PRINT l$(u+1):LOCATE u,24:PRINT l$(u):u=u-1:GOTO 110
+340 u=u+1:IF u>=75 THEN SOUND 1,400,10:u=74:GOTO 110:ELSE u=u-1
+350 LOCATE u+1,24:PRINT l$(u+1):
+360 IF u=5 THEN 110 ELSE LOCATE u,24:PRINT l$(u):u=u+1:GOTO 110
+370 '*********************************************************************
+380 ii=ii+1:IF ii=1000 THEN ii=1
+390 TESTE=0:GOTO 80 
+400 IF lign$="av" THEN ii=ii-1:IF ii=-1 OR ii=0 THEN ii=1:GOTO 390 :ELSE GOTO 390
+410 IF LEFT$(lign$,4)="exit" THEN PRINT "SALUT !!!":FOR i=1 TO 500:NEXT:CALL 0
+420 IF LEFT$(lign$,3)="dr " THEN 500
+430 IF lign$="" THEN 390
+431 IF LEFT$(lign$,4)="fin " THEN 800
+432 IF LEFT$(lign$,4)="deb " THEN 900 
+440 IF LEFT$(lign$,3)="pt " THEN 520
+450 IF LEFT$(lign$+" ",3)="lt " THEN 550       
+470 IF LEFT$(lign$+" ",3)="ef " THEN 600
+475 IF LEFT$(lign$+" ",3)="as " THEN 10000
+476 IF LEFT$(lign$+" ",6)="erase " THEN 1200
+480 IF LEFT$(lign$,3)="rc " THEN 680
+481 IF LEFT$(lign$+" ",3)="sv " THEN 1300
+482 IF LEFT$(lign$+" ",3)="ch " THEN 1400
+485 IF LEFT$(lign$+" ",3)="tt " THEN 1000
+486 IF LEFT$(lign$+" ",3)="ts " THEN 1100
+490 ligne$(ii)=lign$:ii=ii+1:GOTO 390  
+500 GOSUB 650
+510 IF f<1 OR f>1000 THEN 540 ELSE ii=f:GOTO 390     
+520 GOSUB 650   
+530 IF f<1 OR f>1000 THEN 540 ELSE PRINT ligne$(f):GOTO 390   
+540 PRINT "Syntax Error !!":uu=uu+1:GOTO 390 
+550 GOSUB 650:g=1:IF f2=0 OR f2>1000 THEN f2=1000  
+560 IF f=0 OR f>1000 THEN g=1 ELSE g=f
+570 IF g>f2 THEN GOTO 390 ELSE IF ligne$(g)="" THEN g=g+1:GOTO 570 
+580 IF INKEY(47)=0 THEN :GOTO 390 
+590 PRINT "no:";g;" ";:PRINT ligne$(g):g=g+1:GOTO 570
+600 GOSUB 650
+610 IF f=0 THEN IF ii=1 THEN 540 ELSE ERASE ligne$:ii=1:DIM ligne$(1001):GOTO 390
+620 IF f<1 OR f>1000 THEN 540 
+630 IF f2=0 THEN f2=f
+640 FOR h=f TO f2:ligne$(h)="":NEXT:GOTO 390    
+650 f$=" ":f=INSTR(lign$,f$):f$=RIGHT$(lign$,LEN((lign$))-f):f=VAL(f$):
+660 f$="-":f2=INSTR(lign$,f$):f$=RIGHT$(lign$,LEN((lign$))-f2):f2=VAL(f$): 
+670 RETURN
+680 f$="(":f=INSTR(lign$,f$):IF f=0 THEN 540 ELSE f$=RIGHT$(lign$,LEN((lign$))-f) 
+690 ff$=")":f2=INSTR(f$,ff$):IF f2=0 THEN 540 ELSE f2$=LEFT$(f$,f2-1) 
+700 i=0
+710 i=i+1:IF i=1001 THEN 390 ELSE h=INSTR(ligne$(i),f2$):IF h=0 THEN 710
+720 PRINT "No ";i;ligne$(i):GOTO 710
+800 GOSUB 650 
+810 IF f<1 OR f>1000 THEN 540 ELSE zenf=f+1
+820 GOTO 390
+850 GOSUB 650 
+855 IF f<0 OR f>1000 THEN 540   
+856 IF f2<0 OR f2>1000 THEN 540   
+857 IF f>f2 THEN 540
+858 IF f2=0 THEN f2=1000
+860 hh=1
+861 IF f=f2 THEN 390
+862 IF ligne$(f)="" THEN f=f+1:GOTO 861  
+863 lign$=ligne$(f):ligne$(f)="":ligne$(hh)=lign$:hh=hh+1:f=f+1:GOTO 861 
+900 GOSUB 650:
+910 IF f<1 OR f>1000 THEN 540 ELSE zenr=f-1
+920 GOTO 390
+1000 GOSUB 650 
+1010 IF f<0 OR f>1000 THEN 540 
+1020 IF f2<0 OR f2>1000 THEN 540      
+1021 IF f=0 AND f2=0 THEN f=ii-1:f2=ii:GOTO 1040         
+1025 IF f2=0 THEN f2=1000
+1030 IF f>f2 THEN 540 
+1040 zenr=f-1:zenf=f2
+1050 TESTE=1:GOTO 10000     
+1100 zenr=0:zenf=10000:TESTE=1:GOTO 10000
+1200 GOSUB 650
+1210 IF f=1 THEN ERASE lata$,wlta,ulata$,udata$:DIM lata$(50),wlta(50),ulata$(50),udata$(50,2)
+1220 IF f=2 THEN ERASE lata$,wlta,ulata$,udata$,ligne$:DIM lata$(50),wlta(50),ulata$(50),udata$(50,2),ligne$(1001)
+1230 IF f<>1 AND f<>2 THEN 540 
+1240 GOTO 390
+1300 f$="(":f=INSTR(lign$,f$):IF f=0 THEN 540 ELSE f$=RIGHT$(lign$,LEN((lign$))-f) 
+1310 ff$=")":f2=INSTR(f$,ff$):IF f2=0 THEN 540 ELSE f2$=LEFT$(f$,f2-1):nom$=f2$
+1320 fff$=":":f3=INSTR(f2$,fff$):IF f3=0 THEN 540 ELSE f3$=LEFT$(f2$,f3-1) 
+1330 IF f3$="a" THEN 1350
+1335 IF f3$="b" THEN 1400
+1336 GOTO 540
+1350 ff$=")":f2=INSTR(lign$,ff$):IF f2=0 THEN 1370 ELSE f2$=RIGHT$(lign$,LEN((lign$))-f2)    
+1360 ff$="-":f2=INSTR(f2$,ff$):IF f2=0 THEN 1370 ELSE f3$=RIGHT$(f2$,LEN((f2$))-f2)   
+1370 f2=VAL(f2$)
+1371 IF f2=0 THEN f2=1
+1372 f3=VAL(f3$) 
+1373 IF f3=0 THEN f3=1000 
+1374 IF f2>f3 THEN 540     
+1375 fff$=":":f4=INSTR(nom$,fff$):IF f4=0 THEN 540 ELSE f3$=RIGHT$(nom$,LEN((nom$))-f4) 
+1376 IF LEN(nom$)>8 THEN 540
+1377 OPENOUT nom$+".DES"
+1378 WRITE#9,f2,f3:FOR hjk=f2 TO f3 
+1379 WRITE #9,ligne$(hjk):NEXT:CLOSEOUT:GOTO 390
+1400 f$="(":f=INSTR(lign$,f$):IF f=0 THEN 540 ELSE f$=RIGHT$(lign$,LEN((lign$))-f)
+1410 ff$=")":f2=INSTR(f$,ff$):IF f2=0 THEN 540 ELSE f2$=LEFT$(f$,f2-1):nom$=f2$
+1420 IF LEN(nom$)>8 THEN 540
+1430 OPENIN nom$+".DES" 
+1440 INPUT#9,f2,f3:FOR hjk=f2 TO f3:INPUT #9,ligne$(hjk):NEXT:GOTO 390   
+9999 END
+10000 '*
+10110 sor=0:listflag=-1
+10120 REM Tester debut de ligne --------
+10130 zenr=zenr+1:IF zenr=zenf THEN PRINT#sor,"End Assumed":GOTO 13400 
+10140 zei$=ligne$(zenr)
+10145 IF zei$="" THEN zei$="NOP"
+10190 GOTO 10250
+10240 REM decomposer ligne-------------
+10250 zeia$=zei$
+10270 FOR i=0 TO 3:a$(i)="":NEXT
+10280 bepo=INSTR(zei$,";")
+10290 IF bepo=0 THEN bemer$="":GOTO 10320
+10300 bemer$=RIGHT$(zei$,LEN(zei$)-bepo+1)
+10310 zei$=LEFT$(zei$,bepo-1)
+10320 j=0
+10330 IF LEFT$(zei$,1)=" " THEN zei$=RIGHT$(zei$,LEN(zei$)-1):GOTO 10330
+10340 sppo=INSTR(zei$," ")
+10350 IF zei$="" THEN j=j-1:GOTO 10420
+10360 IF sppo=0 THEN 10410
+10370 a$(j)=LEFT$(zei$,sppo-1):zei$=RIGHT$(zei$,LEN(zei$)-sppo)
+10380 IF zei$="" THEN j=j-1:GOTO 10420    
+10390 IF j>3 THEN 10420
+10400 j=j+1:GOTO 10330
+10410 a$(j)=zei$
+10420 IF j>2 THEN 13250
+10430 REM Interpretation---------------
+10440 j=0
+10450 bef$=LEFT$(UPPER$(a$(j))+"     ",4)
+10460 po=INSTR(teadr$,bef$)
+10470 IF po<>0 THEN lp=0:GOTO 11190
+10480 po=INSTR(teb1$,bef$)
+10490 IF po<>0 THEN lp=1:GOTO 10810
+10500 po=INSTR(teed$,bef$)  
+10510 IF po<>0 THEN lp=2:pw(1)=&ED:GOTO 10850
+10520 REM test pseudo instr -----------
+10530 po=INSTR(teps$,bef$)  
+10540 IF po<>0 THEN 10890
+10550 REM a$(j)=label ? ---------------
+10560 IF j>0 THEN 13250
+10570 IF a$(0)="" THEN 13100
+10580 a$=a$(0)
+10590 GOSUB 13630
+10600 IF nolafl THEN 13280
+10610 label$=UPPER$(lab$)
+10620 wert=mpc
+10630 lata$(ltp)=label$:wlta(ltp)=mpc:ltp=ltp+1
+10640 FOR i=0 TO ultp:IF label$=ulata$(i) THEN 10670
+10650 NEXT i
+10660 j=j+1:GOTO 10450
+10670 ON udata(i,2) GOTO 10680,10700
+10680 adr=udata(i,1)-1:ziel=wert:GOSUB 14100
+10690 pw(1)=of:GOTO 10720
+10700 pw(2)=INT(wert/256)
+10710 pw(1)=wert-pw(2)*256
+10720 PRINT#sor,"**** Ligne ";udata(i,0);" : ";ulata$(i);"=&";HEX$(wert,4) 
+10730 FOR k=1 TO udata(i,2)
+10740 POKE udata(i,1)+k-1,pw(k)
+10750 NEXT k
+10760 FOR k=i TO ultp-1
+10770 ulata$(k)=ulata$(k+1)
+10780 FOR c=0 TO 2:udata(k,c)=udata(k+1,c):NEXT c:NEXT k
+10790 ultp=ultp-1:i=i-1
+10800 GOTO 10650
+10810 REM bef1 / instruction 1 octet
+10811 '     sans operande ----------
+10820 IF a$(j+1)<>"" THEN 13270
+10830 pw(1)=wb1((po-1)/4)
+10840 GOTO 13100
+10850 REM ed / 2 octets sans operande
+10851 '     debut ed---------------
+10860 IF a$(j+1)<>"" THEN 13270
+10870 pw(2)=wed((po-1)/4)
+10880 GOTO 13100 
+10890 REM pseudo instructions ---------
+10900 j=j+1
+10910 ope$=a$(j):op$=UPPER$(ope$)
+10920 ON (po-1)/4 GOTO 10980,11040,11060,11080,11100,11160
+10930 REM EQU
+10940 IF label$="" THEN 13280
+10950 a$=op$:GOSUB 13790
+10960 wlta(ltp-1)=wert
+10970 GOTO 13100
+10980 REM ORG
+10990 IF op$="" THEN 13290
+11000 a$=op$:GOSUB 13790
+11010 lp=0
+11020 mpc=wert:mpstart=mpc
+11030 GOTO 13100
+11040 REM END
+11050 GOTO 13400
+11060 REM DB
+11070 a$=op$:GOSUB 14050:GOTO 13100
+11080 REM DW
+11090 a$=op$:GOSUB 13860:GOTO 13100     
+11100 REM DM
+11110 IF LEFT$(op$,1)<>CHR$(34) OR RIGHT$(op$,1)<>CHR$(34) THEN 13260
+11120 zwi$=MID$(ope$,2,LEN(ope$)-2)
+11130 lp=LEN(zwi$)
+11140 FOR i=1 TO lp:pw(i)=ASC(MID$(zwi$,i,1)):NEXT
+11150 GOTO 13100
+11160 REM DS
+11170 a$=op$:GOSUB 13860
+11180 ds=wert:lp=0:GOTO 13100
+11190 REM evalution instr ------------
+11200 j=j+1:ope$=a$(j)
+11210 op$=UPPER$(ope$)
+11220 IF op$="" AND bef$<>"RET " THEN 13290
+11230 GOSUB 11240:GOTO 11340
+11240 poko=INSTR(op$,",") 
+11250 IF poko=0 THEN o1$=op$:koflag=0:GOTO 11280
+11260 koflag=-1
+11270 o1$=LEFT$(op$,poko-1):o2$=RIGHT$(op$,LEN(op$)-poko)
+11280 pokla=INSTR(op$,"("):poklz=INSTR(op$,")")
+11290 IF pokla=0 THEN klaflag=0:klin$="":GOTO 11330
+11300 IF pokla>poklz THEN GOTO 13260
+11310 klaflag=-1
+11320 klin$=MID$(op$,pokla+1,poklz-pokla-1)
+11330 RETURN
+11340 REM
+11350 ipo=INSTR(op$,"IX")
+11360 IF ipo<>0 THEN pwi=&DD:ireg$="IX":GOTO 11450
+11370 ipo=INSTR(op$,"IY")  
+11380 IF ipo<>0 THEN pwi=&FD:ireg$="IY":GOTO 11450  
+11390 zwi=(po+3)/4
+11400 ON zwi GOTO 12630,11920,11900,12040,12040,12080,12220,12240,12340,12320,12380,12430,12430,12520,12560
+11410 REM ld0,sautrelatif(2),saut(3),nombre(2),pile(2),rst,i/o,im
+11420 IF zwi<24 THEN 11590
+11430 IF zwi<32 THEN 11760
+11440 GOTO 11830
+11450 REM instruction indexees ------
+11460 iflag=-1
+11470 IF (NOT klaflag) OR (ipo-pokla<>1) THEN op$=LEFT$(op$,ipo-1)+"HL"+RIGHT$(op$,LEN(op$)-ipo-1):GOTO 11550
+11480 zwi$=MID$(klin$,3,1):IF zwi$<>"+" AND zwi$<>"-" THEN IF bef$="JP  " THEN 11540 ELSE GOTO 13250
+11490 a$=RIGHT$(klin$,LEN(klin$)-3)
+11500 dis$=a$:GOSUB 14050:lp=lp-1
+11510 IF fe$<>"" THEN 13260
+11520 disflag=-1
+11530 disw=wert:IF zwi$="-" THEN disw=(disw XOR 255) +1
+11540 op$=LEFT$(op$,pokla)+"HL"+RIGHT$(op$,LEN(op$)-poklz+1)
+11550 IF (INSTR(op$,"IX")=0) AND (INSTR(op$,"IY")=0)THEN 11570
+11560 IF (op$=("HL,"+ireg$))AND(bef$="ADD ") THEN op$="HL,HL" ELSE GOTO 13260
+11570 GOSUB 11240
+11580 GOTO 11390
+11590 REM arilog ----------------------
+11600 IF NOT koflag THEN a$=o1$:GOTO 11620
+11610 IF o1$<>"A" THEN 11670 ELSE a$=o2$
+11620 lp=1:code=zwi-16
+11630 GOSUB 13680
+11640 IF rflag THEN pw(1)=128 OR(code*8) OR rrr:GOTO 13100
+11650 pw(1)=&XC6 OR (code*8)
+11660 GOSUB 14050:GOTO 13100
+11670 IF o1$<>"HL" THEN 13260
+11680 a$=o2$
+11690 GOSUB 13730
+11700 IF NOT rflag THEN 13260
+11710 IF bef$="ADD " THEN code=&X9:lp=1:GOTO 11750
+11720 pw(1)=&ED:lp=2
+11730 IF bef$="ADC " THEN code=&X4A:GOTO 11750 
+11740 IF bef$="SBC " THEN code=&X42 ELSE GOTO 13250
+11750 pw(lp)=code OR (dd*16):GOTO 13100
+11760 REM rotation --------------------
+11770 lp=2:pw(1)=&CB
+11780 IF koflag THEN 13260
+11790 a$=op$:GOSUB 13680
+11800 IF NOT rflag THEN 13260
+11810 pw(2)=(8*(zwi-24)) OR rrr
+11820 GOTO 13100
+11830 REM bitti -----------------------
+11840 lp=2:pw(1)=&CB   
+11850 a$=o2$:GOSUB 13680
+11860 IF NOT rflag THEN 13260
+11870 bbb=ASC(o1$)-48
+11880 IF (0>bbb) OR (7<bbb) OR (LEN(o1$)<>1) THEN 13260
+11890 pw(2)=(64*(zwi-31)) OR (bbb*8) OR rrr:GOTO 13100
+11900 REM sauts relatifs --------------
+11910 lp=1:pw(1)=&10:a$=op$:GOTO 11990
+11920 lp=1
+11930 IF NOT koflag THEN ccc=&X3:a$=op$:GOTO 11980
+11940 a$=o1$:GOSUB 13760
+11950 IF (NOT cflag) OR (ccc>3) THEN 13260
+11960 ccc=ccc OR 4
+11970 a$=o2$
+11980 pw(1)=ccc*8
+11990 IF LEFT$(a$,1)<>"$" THEN GOSUB 13860:lp=lp-2:IF i>ltp THEN wert=mpc :GOTO 12010:ELSE 12010
+12000 wert=mpc+VAL(RIGHT$(a$,LEN(a$)-1))
+12010 lp=lp+1:adr=mpc:ziel=wert
+12020 GOSUB 14100
+12030 pw(2)=of:GOTO 13100
+12040 REM sauts -----------------------
+12050 zwi=1:lp=1
+12060 IF bef$="RET " THEN code=0 ELSE code=&X4
+12070 GOTO 12110
+12080 IF op$="(HL)" THEN lp=1:pw(1)=&E9:GOTO 13100
+12090 code=&X2
+12100 zwi=0:lp=1 
+12110 IF bef$="RET " THEN IF op$="" THEN 12130 ELSE 12160 ELSE
+12120 IF koflag THEN 12160
+12130 pw(1)=192 OR code OR 1 OR (zwi*8)
+12140 a$=op$
+12150 GOTO 12200
+12160 a$=o1$:GOSUB 13760  
+12170 IF NOT cflag THEN 13260    
+12180 pw(1)=192 OR code OR (ccc*8)  
+12190 a$=o2$ 
+12200 IF bef$="RET " THEN 13100
+12210 GOSUB 13860:GOTO 13100
+12220 REM Instruction de comptage -----  
+12230 zwi=0:GOTO 12250
+12240 zwi=1
+12250 IF koflag THEN 13260
+12260 lp=1:a$=op$:GOSUB 13680
+12270 IF rflag THEN pw(1)=&X4 OR (rrr*8)  OR zwi:GOTO 13100
+12280 GOSUB 13730
+12290 IF NOT rflag THEN 13260
+12300 pw(1)=&X3 OR (dd*16) OR (zwi*8)
+12310 GOTO 13100
+12320 REM Instruction de pile ---------
+12330 code=&XC1:GOTO 12350
+12340 code=&XC5
+12350 a$=op$:dreg$(3)="AF":GOSUB 13730:dreg$(3)="SP"
+12360 IF NOT rflag THEN 13260  
+12370 lp=1:pw(1)=code OR (dd*16):GOTO 13100
+12380 REM restart ---------------------
+12390 a$=op$:GOSUB 14050
+12400 zwi=wertl/8 
+12410 IF zwi<>INT(zwi) OR zwi>7 THEN 13260
+12420 lp=1:pw(1)=&XC7 OR (zwi*8):GOTO 13100
+12430 REM Instruction I/O--------------
+12440 IF NOT(koflag AND klaflag) THEN 13260
+12450 IF bef$="IN  " THEN zwi=0 ELSE zwi=1:zwi$=o2$:o2$=o1$:o1$=zwi$
+12460 IF klin$<>"C" THEN 12500
+12470 a$=o1$:GOSUB 13680
+12480 IF (NOT rflag) OR (klin$<>"C") THEN 13260
+12490 lp=2:pw(1)=&ED:pw(2)=64 OR (rrr*8) OR zwi:GOTO 13100
+12500 lp=1:a$=klin$:GOSUB 14050
+12510 pw(1)=&XDB XOR (zwi*8):GOTO 13100
+12520 REM interrupt modi --------------
+12530 IF op$<>"0" AND op$<>"1" AND op$<>"2" THEN 13260
+12540 lp=2:pw(1)=&ED
+12550 pw(2)=&X46 OR ((VAL(op$)-(op$<>"0"))*8):GOTO 13100
+12560 REM EX --------------------------
+12570 lp=1
+12580 IF op$="(SP),HL" THEN pw(1)=&E3:GOTO 13100
+12590 IF op$="DE,HL" THEN pw(1)=&EB:GOTO 12620
+12600 IF op$="AF,AF'" THEN pw(1)=&8:GOTO 13100    
+12610 GOTO 13260
+12620 IF iflag THEN 13260 ELSE 13100
+12630 REM ld --------------------------
+12640 IF NOT koflag THEN 13260
+12650 a$=o1$:GOSUB 13680  
+12660 IF rflag THEN 12860
+12670 GOSUB 13730
+12680 IF rflag THEN 12760
+12690 a$=o2$:GOSUB 13730
+12700 IF rflag THEN 12740   
+12710 zwi$=o2$:o2$=o1$:o1$=zwi$
+12720 a=0:GOSUB 12940
+12730 IF nflag THEN 13260 ELSE GOTO 13100
+12740 IF NOT klaflag THEN 13260 
+12750 zwi$=o2$:zwiflag=1:GOTO 12800
+12760 IF op$="SP,HL" THEN lp=1:pw(1)=&F9:GOTO 13100
+12770 IF klaflag THEN zwi$=o1$:zwiflag=0:GOTO 12800
+12780 a$=o2$
+12790 lp=1:code=1:GOTO 12830
+12800 a$=klin$
+12810 IF zwi$="HL" THEN lp=1:code=&A:GOTO 12830
+12820 lp=2:pw(1)=&ED:code=&X4B
+12830 code=code AND NOT (zwiflag*8)
+12840 pw(lp)=code OR (dd*16)
+12850 GOSUB 13860:GOTO 13100
+12860 zzz=rrr:a$=o2$:GOSUB 13680 
+12870 IF NOT rflag THEN 12900
+12880 lp=1:pw(1)=64 OR (zzz*8) OR rrr
+12890 IF pw(1)=&76 THEN 13260 ELSE 13100
+12900 a=1:GOSUB 12940
+12910 IF NOT nflag THEN 13100  
+12920 lp=1:pw(1)=&X6 OR (rrr*8)   
+12930 a$=o2$:GOSUB 14050:GOTO 13100
+12940 REM Chargement 8 bits special ---
+12950 nflag=0
+12960 IF o1$<>"A" THEN nflag=-1:RETURN
+12970 IF klaflag THEN 13030
+12980 IF o2$="I" THEN zwi=0:GOTO 13010
+12990 IF o2$="R" THEN zwi=1:GOTO 13010
+13000 nflag=-1:RETURN
+13010 code=&X47:lp=2:pw(1)=&ED
+13020 pp=(a*2) OR zwi:GOTO 13080
+13030 IF klin$="BC" THEN zwi=0:GOTO 13070
+13040 IF klin$="DE" THEN zwi=1:GOTO 13070
+13050 lp=1:pw(1)=&X32 OR (a*8)
+13060 a$=klin$:GOSUB 13860:RETURN
+13070 code=&X2:lp=1:pp=(zwi*2)OR a
+13080 pw(lp)=code OR (8*pp):RETURN
+13090 REM
+13100 REM Sortie **********
+13110 IF iflag THEN 13310
+13115 IF INKEY(47)=0 THEN PRINT"Break !!!":GOTO 390
+13120 IF fe$<>"" THEN feza=feza+1
+13130 IF NOT listflag THEN LOCATE 5,3:PRINT zenr:GOTO 13200
+13140 IF fe$<>"" THEN PRINT CHR$(7);:PRINT#sor,fe$,TAB(30);zenr;zeia$:GOTO 13210
+13150 PRINT#sor,HEX$(mpc,4);" ";
+13160 FOR i=1 TO lp:PRINT#sor,HEX$(pw(i),2);:NEXT i
+13170 PRINT#sor,TAB(14);USING"####";zenr;
+13180 PRINT#sor,TAB(20);label$;TAB(27);bef$;TAB(32);ope$;" ";bemer$;
+13190 PRINT#sor:IF teste=1 THEN 13210
+13200 FOR i=1 TO lp:POKE mpc+i-1,pw(i):NEXT i
+13205 mpc=mpc+lp+ds
+13210 lp=0:ds=0
+13220 label$="":bef$="":ope$="":bemer$="":fe$=""
+13230 GOTO 10130
+13240 REM Messages d'erreur -----------
+13250 fe$="Syntax Error":GOTO 13100
+13260 fe$="Syntax Error dans l'operande":GOTO 13100
+13270 fe$="Operande en trop":GOTO 13100
+13280 fe$="Label manquant":GOTO 13100
+13290 fe$="Operande manquant":GOTO 13100
+13300 fe$="illegal Quantity":GOTO 13100
+13310 REM indexe ----------------------
+13320 FOR j=lp TO 1 STEP -1
+13330 pw(j+1)=pw(j):NEXT
+13340 pw(1)=pwi:lp=lp+1
+13350 IF NOT disflag THEN 13380
+13360 IF lp=3 THEN pw(4)=pw(3)
+13370 pw(3)=disw:lp=lp+1
+13380 iflag=0:disflag=0
+13390 GOTO 13120
+13400 REM Fin du programme **********
+13410 PRINT#sor:IF TESTE=1 THEN 390 
+13420 IF ultp=0 THEN 13470
+13430 FOR i=0 TO ultp-1
+13440 PRINT#sor,"Label non-defini";ulata$(i);" en";udata(i,0);" / Adresse &";HEX$(udata(i,1),4)
+13450 feza=feza+1:NEXT i
+13460 PRINT#sor
+13470 PRINT#sor,"Programme :";nom$
+13480 PRINT#sor,"Debut : &";HEX$(mpstart,4);"    Fin : &";HEX$(mpc-1,4)
+13490 PRINT#sor,"Longueur : ";HEX$(mpc-mpstart,4)
+13500 PRINT#sor,feza;:IF feza<2 THEN PRINT#sor," Erreur" ELSE PRINT#sor," Erreurs
+13510 IF ltp=0 THEN 13560
+13520 PRINT#sor,"Table de variable :"
+13530 FOR i=0 TO ltp-1
+13540 PRINT#sor,LEFT$(lata$(i)+"        ",7);HEX$(wlta(i),4),
+13550 NEXT i
+13560 PRINT#sor
+13570 GOTO 390
+13580 IF t$<>"o" THEN 13600
+13590 SAVE nom$+".obj",B,mpstart,mpc-mpstart
+13600 END
+13610 REM Sous-programme **********
+13620 REM test label -----------------
+13630 laas=ASC(UPPER$(LEFT$(a$,1))) 
+13635 laas=ASC(UPPER$(LEFT$(a$,1)))  
+13640 IF laas<65 OR laas>90 THEN nolafl=-1:RETURN
+13650 IF LEN(a$)>6 THEN PRINT"Label trop long":a$=LEFT$(a$,6)
+13660 lab$=a$:nolafl=0
+13670 RETURN
+13680 REM test r ---------------------
+13690 FOR i=0 TO 7:
+13700 IF reg$(i)=a$ THEN rflag=-1:rrr=i:RETURN
+13710 NEXT
+13720 rflag=0:RETURN
+13730 REM test rps -------------------
+13740 FOR i=0 TO 3:IF dreg$(i)=a$ THEN rflag=-1:dd=i:RETURN ELSE NEXT
+13750 rflag=0:RETURN
+13760 REM test cond ------------------
+13770 FOR i=0 TO 7:IF a$=cond$(i) THEN cflag=-1:ccc=i:RETURN ELSE NEXT 
+13780 cflag=0:RETURN
+13790 REM test nombre ----------------
+13800 wert=VAL(a$)
+13810 laas=ASC(LEFT$(a$,1))
+13820 IF wert=0 AND laas<>38 AND (laas>57 OR laas<48) THEN fe$="illegal character":wert=0:RETURN
+13830 IF wert>=0 THEN 13850
+13840 IF LEFT$(a$,1)="&" THEN wert=wert+2^16 ELSE fe$="illegal Quantity":wert=0
+13850 RETURN
+13860 REM Evaluateur -----------------
+13870 GOSUB 13620
+13880 IF nolafl THEN GOSUB 13790:GOTO 13920
+13890 FOR i=0 TO ltp:IF lata$(i)<>lab$ THEN NEXT
+13900 IF i>ltp THEN 13980
+13910 wert=wlta(i)
+13920 werth=INT(wert/256)
+13930 wertl=wert-256*werth
+13940 lp=lp+2
+13950 pw(lp-1)=wertl
+13960 pw(lp)=werth
+13970 RETURN
+13980 ulata$(ultp)=a$
+13990 udata(ultp,0)=zenr
+14000 udata(ultp,1)=mpc+lp-iflag-disflag
+14010 udata(ultp,2)=2+(bef$="DJNZ" OR bef$="JR  ")
+14020 ultp=ultp+1
+14030 wert=0
+14040 GOTO 13920
+14050 REM evaluateur low -------------
+14060 GOSUB 13860
+14070 lp=lp-1
+14080 IF werth<>0 THEN fe$="illegal Quantity":wert=0
+14090 RETURN
+14100 REM Calculer offset ------------
+14110 of=ziel-adr
+14120 of=of-2
+14130 IF of>129 OR of<-126 THEN  fe$="Illegal Quantity":of=0
+14140 IF of<0 THEN of=256+of
+14150 RETURN
+14160 REM Initialisation ***********
+14170 zei$="test"
+14180 vapt=HIMEN-FRE(0)-15
+14190 DEF FNdeek(bpc)=PEEK(bpc)+256*PEEK(bpc+1)  
+14200 MODE 2
+14210 teadr$="LD  JR  DJNZCALLRET JP  INC DEC PUSHPOP RST IN  OUT IM  EX  ADD ADC SUB SBC AND XOR OR  CP  RLC RRC RL  RR  SLA SRA **        * SRL BIT RES SET "
+14220 teed$="CPD CPDRCPI CPIRIND INDRINI INIRLDD LDDRLDI LDIRNEG OTDROTIROUTDOUTIRETIRETNRLD RRD "
+14230 DATA A9,B9,A1,B1,AA,BA,A2,B2,A8,B8,A0,B0,44,BB,B3,AB,A3,4D,45,6F,67
+14240 teb1$="CCF CPL DAA DI  EI  EXX HALTNOP RLA RLCARRA RRCASCF "
+14250 DATA 3F,2F,27,F3,FB,D9,76,00,17,07,1F,0F,37
+14260 tePS$="EQU ORG END DB  DW  DM  DS  "
+14270 DIM lata$(50),wlta(50),ulata$(50),udata$(50,2)
+14280 DIM wb1(12),wed(20)
+14290 FOR i=0 TO 20:READ a$:wed(i)=VAL("&"+a$):NEXT
+14300 FOR i=0 TO 12:READ a$:wb1(i)=VAL("&"+a$):NEXT
+14310 bpc=384:mpc=40960:mpstart=mpc
+14320 DIM reg$(7),cond$(7),dreg$(3)
+14330 FOR i=0 TO 7:READ reg$(i):NEXT
+14340 FOR i=0 TO 7:READ cond$(i):NEXT   
+14350 FOR i=0 TO 3:READ dreg$(i):NEXT  
+14360 DATA B,C,D,E,H,L,(HL),A
+14370 DATA NZ,Z,NC,C,PO,PE,P,M
+14380 DATA BC,DE,HL,SP
+14390 RETURN

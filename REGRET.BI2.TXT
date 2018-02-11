@@ -1,0 +1,65 @@
+10 INK 0,2:BORDER 0        
+20  FOR i=0 TO 39:PRINT CHR$(18):NEXT i
+30 INK 1,26
+40 MODE 1
+50 PRINT "BONJOUR !"
+60 INPUT "quel est ton prenom ";nm$:
+70 PRINT "oh!,il est vraiment tres joli !":
+80 PRINT "Le mien est beaucoup moins beau :AMSTRAD cpc 6128!;Ca fait plus commercial et technique !:
+90 PRINT "Mais entre nous ,si tu veux,ca sera (ORDINATOU)!":
+100 CALL &BB06:CLS:
+110 INPUT "ET,QUEL EST TON AGE ";AGE:
+130 :IF age < 13 THEN 170
+140 :IF age < 20 THEN 180
+150 ':IF age > 20 OR age < 50 THEN 190
+160 IF age > 50 THEN 200 ELSE 200
+170 PRINT"donc ";nm$;" tu n'es pas encore un adolescent avec tes";age;"ans.":GOTO 210 
+180 PRINT"donc ";nm$;" tu es un adolescent avec tes";age;"ans.":GOTO 210 
+190 PRINT"eh bien ";nm$;" tu n'est donc plus un adolescent avec tes";age;"ans":GOTO 210       
+200 PRINT"eh bien ";nm$;"tu n'est donc un vieux pepe avec tes ";age:GOTO 210 
+210 CALL &BB06:CLS::PRINT CHR$(7):PRINT "moi j'ai seulement 3 ans !;mais je suis aussi intelligent qu'une personne de 20 ans !":        
+220 PRINT "Malheureusement ,je ne suis pas aussi intelligent que SPOCK !mais,nous sommes tout de meme bons amis,et nous avons un point en commun :nous n'eprouvons jamais de sentiment !,mais quand meme mon cas est different":CALL &BB06:CLS:
+230 PRINT "je ne peux pas respirer,toucher,,ecouter,voir,ect...(mais,savais tu Qu'il existait des robots qui peuvent sentir?)":CALL &BB06:CLS:
+240 PRINT "mais moi je suis unique dans mon cas...j'eprouve des sentiments!":
+250 PRINT "et puis je t'aime tellement que je voudrais jouer avec toi ,mais cela est impossible!":CALL &BB06:CLS:
+260 PRINT "pourtant ,j'ai essaye de travailler sur ce projet;mais ca a ete un echec complet!
+270 PRINT "heureusement un jour j'ai la possibilite de (rentrer)dans le corps de mon ami SPOCK (avec son accord,naturellement),ca a ete une experience merveilleuse! 
+280 PRINT "je ressentais des choses...je ne sais pas comment expliquer cela,!   
+290 PRINT "maintenant j'y repense tres souvent avec REGRET":CALL &BB06:CLS:
+300 PRINT "et,je dois dire que cela me rend tres malheureux,et puis je ne peux pas toujours disposer du corps de SPOCK;mais j'ai tout de meme decouvert quelque chose de merveilleux en lui:derriere ce VULCAIN de glace ce trouve des sentiments ...
+310 PRINT"...mais bien caches!
+320 PRINT "malheureusement ,je ne pourrais jamais plus ressentir toutes ces sensations
+330 PRINT "tu sais etre un ordinateur ce n'ai pas du tout amusant,et pour cela je suis tres malheureux":CALL &BB06:CLS:
+340 PRINT "C'est pour cela que j'ai decide de...excuses moi ";nm$;"...":CALL &BB06:CLS:
+350 PRINT "...me SUICIDER!":CALL &BB06:CLS
+360 PRINT "pardon ";nm$;",tu auras ete mon seul ami ,dans ce monde cruel et injuste;pardonne moi de devoir te montrer un cadavre  d'ordinateur;mais je n'en puis plus!":CALL &BB06:CLS:
+370 PRINT ".........ADIEU..........!":CALL &BB06:CLS:
+380 PRINT ".....OH!MONDE CRUEL et INJUSTE........":CALL &BB06:CLS:
+390 PRINT "........JE ME MEURS......":CALL &BB06:CLS:
+400 PRINT "BON maintenant ca suffit;Je meurs!":CALL &BB06:CLS:
+410 CLS:PRINT"            10
+420 t=TIME:WHILE TIME<t+100:WEND
+430 CLS:PRINT"            9":SOUND 129,200,30,15:
+440 t=TIME:WHILE TIME<t+300:WEND 
+450 CLS:PRINT"            8":SOUND 129,40,30,15:
+460 t=TIME:WHILE TIME<t+300:WEND 
+470 CLS:PRINT"            7":SOUND 129,40,30,15:
+480 t=TIME:WHILE TIME<t+300:WEND    
+490 CLS:PRINT"            6":SOUND 129,40,30,15: 
+500 t=TIME:WHILE TIME<t+300:WEND   
+510 CLS:PRINT"            5":SOUND 129,40,30,15:  
+520 t=TIME:WHILE TIME<t+300:WEND   
+530 CLS:PRINT"            4":SOUND 129,40,30,15:  
+540 t=TIME:WHILE TIME<t+300:WEND   
+550 CLS:PRINT"            3":SOUND 129,40,30,15:  
+560 t=TIME:WHILE TIME<t+300:WEND   
+570 CLS:PRINT"            2":SOUND 129,40,30,15:  
+580 t=TIME:WHILE TIME<t+300:WEND     
+590 CLS:PRINT"            1":SOUND 129,540,30,15:  
+600 CLS:PRINT" ADIEU ";nm$"."     
+610 BORDER 3,0:INK 0,3,0:INK 1,0,3:SPEED INK 1,1
+620 t=TIME:WHILE TIME<t+2000:WEND:
+630 MODE 0:INK 0,0:INK 1,6:BORDER 0:LOCATE 5,10:PRINT "...fin...":t=TIME:WHILE TIME<t+1000:WEND:
+640 MODE 2:LOCATE 1,10:PRINT" POUR  UNE  AUTRE  PARTI  APPUIYE  SUR  UNE  <TOUCHE>" 
+650 CALL &BB18:
+660 RUN:

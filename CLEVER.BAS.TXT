@@ -1,0 +1,123 @@
+1 RESTORE 10:FOR i=0 TO 12:READ s,ss:INK s,ss:NEXT:BORDER 0
+2 'POKE &BE78,255:POKE &BE66,1:POKE &BDEE,&C9  
+3 PAPER 1:PEN 0:MODE 2:CLS:LOCATE 1,25:PRINT "Ecran vert ou couleur ?";
+4 a$=INKEY$:IF a$="v" OR a$="V" THEN coul=1 ELSE IF a$="c" OR a$="C" THEN coul=2 ELSE 4
+5 ON ERROR GOTO 10000
+7 LOCATE 1,25:IF coul=1 THEN PRINT "      vert                 ":ELSE PRINT "              couleur    "
+8 FOR i=1 TO 500:NEXT
+10 DATA 0,26,1,0,2,6,3,2,4,1,5,24,6,20,7,8,8,10,9,12,10,15,11,16,12,18,13,7,14,11,15,3
+20 FOR i=0 TO 15:INK i,0:NEXT 
+30 MODE 0:GOTO 80
+40 blnom(1)=0:bln(1)=1
+50 blnom(2)=0:bln(2)=3
+60 blnom(3)=0:bln(3)=5
+70 blnom(4)=0:bln(4)=7:RETURN
+80 erreur=1:OPENIN"clever.sav":INPUT #9,TESTE$:IF TESTE$="~TESTprotec~" THEN FOR i=1 TO 5:INPUT #9,hijo(i),hijo$(i):NEXT:CLOSEIN:ELSE GOTO 10000  
+130 erreur=0
+150 hiscor=hijo(1)
+160 SYMBOL 255,126,255,191,159,151,163,193,126 
+170 SYMBOL 254,94,255,191,159,151,163,193,126   
+180 SYMBOL 253,110,255,191,159,151,163,193,126     
+190 SYMBOL 252,118,255,191,159,151,163,193,126   
+195 IF coul=2 THEN c1=7:c2=8:c3=9:c4=10:ELSE c1=15:c2=8:c3=12:c4=5
+200 ball$(1)=CHR$(15)+CHR$(c1)+CHR$(255)
+210 ball$(2)=CHR$(15)+CHR$(c2)+CHR$(254) 
+220 ball$(3)=CHR$(15)+CHR$(c3)+CHR$(253)
+230 ball$(4)=CHR$(15)+CHR$(c4)+CHR$(252)
+240 MODE 0:LOAD"clever.scr",&C000:GOSUB 40  
+250 saut=0:u=2:g=11:tim=900:lii=10:score=0:li=0:z=0:level=0:u=1:t=200
+260 SPEED KEY 30,2:WINDOW#1,1,7,25,1:PAPER 1:PAPER#1,1:PEN#1,0 
+290 LOCATE#1,2,11:PRINT#1,USING"#####";hiscor
+340 PEN 1:LOCATE 15,1:PRINT ball$(1)
+350 d=RND*4.49:d=CINT(d):IF d=0 THEN 350
+360 LOCATE 15,3:PRINT ball$(2);
+370 LOCATE 15,5:PRINT ball$(3);    
+380 LOCATE 15,7:PRINT ball$(4);     
+390 LOCATE 6,22:PEN 2:PRINT "LIGNE:";:PRINT"0000"
+400 FOR i=1 TO 4:LOCATE 18,bln(i):PRINT blnom(i):NEXT   
+520 FOR i=8 TO 13:LOCATE i,20:PRINT ball$(2):NEXT:  
+530 LOCATE 8,12:PRINT"MANETT"
+540 LOCATE 8,15:PRINT"CLAVIE"
+550 LOCATE 8,18:PRINT"LEVEL1":le=1 
+600 RESTORE 10
+601 FOR i=0 TO 15:READ s,ss:INK s,ss:FOR ii=1 TO 100:NEXT:NEXT
+610 FOR h=1 TO 1000:IF INKEY(38)=0 THEN dr=75:ga=74:fe=76:vi=73:ra=72:GOTO 680
+620 IF INKEY(62)=0 THEN dr=1:ga=8:fe=9:vi=2:ra=0:GOTO 680
+630 IF INKEY(36)=0 THEN le=le+1:FOR ii=1 TO 200:NEXT
+640 IF le=3 THEN le=1
+650 LOCATE 13,18:PRINT USING"#";le 
+660 NEXT:CLS:GOTO 20000
+670 IF INKEY(47)<>0 THEN 670 
+680 FOR i=4 TO 19:LOCATE 8,i:PRINT STRING$(6,32):NEXT 
+690 d2=RND*4.4:d2=CINT(d2):IF d2=0 THEN 690 ELSE LOCATE#1,4,16:PRINT#1,ball$(d2)
+700 LOCATE 11,1:PRINT ball$(d):LOCATE 18,bln(d):blnom(d)=blnom(d)+1:PRINT USING"###";blnom(d);     
+710 u=u+1:IF saut=0 THEN 770 ELSE GOTO 800  
+720 LOCATE g,u-1:PRINT " ":IF saut=0 THEN LOCATE g,u:PRINT ball$(d):LOCATE g,u-1:PRINT " ":FOR i=1 TO t:NEXT:t=200:ELSE GOTO 710 
+721 IF INKEY(ra)=0 THEN t=500
+722 IF INKEY(vi)=0 THEN t=1
+730 IF INKEY(ga)=0 THEN 830   
+740 IF INKEY(dr)=0 THEN 850  
+750 IF INKEY(fe)=0 THEN 870    
+755 IF INKEY(27)=0 THEN INK c1,20:INK c2,20:INK c3,20:INK c4,20:CLEAR INPUT:CALL &BB06:CLEAR INPUT:RESTORE 10:GOSUB 765:GOTO 755
+760 GOTO 710 
+765 FOR i=0 TO 15:READ s,ss:INK s,ss:NEXT:RETURN  
+770 score=score+1+le*2.5:PEN#1,0:LOCATE#1,2,2:PRINT#1,USING"#####";score:tim=tim-0.25:IF tim<=0 THEN 1020
+780 IF score>hiscor THEN LOCATE#1,2,11:PRINT#1,USING"#####";score:hiscor=score:z=1   
+790 LOCATE#1,3,8:PEN #1,3:PRINT#1,USING"###";tim     
+800 LOCATE g,u:a$=COPYCHR$(#0)
+805 IF li=lii THEN level=level+1:lii=lii+10:FOR i=tim TO 1 STEP -10:score=score+50:LOCATE#1,2,2:PRINT#1,USING"#####";score:SOUND 1,i,1:LOCATE#1,3,8:PEN #1,3:PRINT#1,USING"###";i:NEXT:tim=900:LOCATE#1,3,5:PEN#1,3:PRINT#1,USING"###";level
+810 IF a$=" "THEN 720 ELSE u=u-1:LOCATE g,u:PRINT ball$(d):LOCATE g,u-1:PRINT " ":score=score+10:SOUND 3,2000,5,15,,,10:t=200:saut=0:GOTO 910
+820 END
+830 LOCATE g,u:PRINT " ":g=g-1:LOCATE g,u:aa$=COPYCHR$(#0):IF aa$<>CHR$(32) THEN g=g+1   
+840 GOTO 880
+850 LOCATE g,u:PRINT " ":g=g+1: LOCATE g,u:aa$=COPYCHR$(#0):IF aa$<>CHR$(32) THEN g=g-1   
+860 GOTO 880   
+870 saut=1:GOTO 710  
+880 IF g=7 THEN g=8 :GOTO 710
+890 IF g=14 THEN g=13 :GOTO 710 
+900 GOTO 710
+910 rr=0:FOR i=8 TO 13
+920 LOCATE i,u:a$=COPYCHR$(#0):LOCATE i+1,u:b$=COPYCHR$(#0):LOCATE i,u+1:c$=COPYCHR$(#0):LOCATE i,u-1:d$=COPYCHR$(#0)   
+930 IF a$=b$ THEN rr=1
+940 IF a$=" " THEN rr=1
+950 IF a$=c$ THEN rr=1 
+960 IF le=2 THEN IF a$=d$ THEN rr=1 
+970 NEXT
+980 IF rr=0 THEN li=li+1:PEN #1,3:PEN 0:LOCATE 12,22:PRINT USING"####";li:LOCATE 8,u:PRINT"     ":WINDOW 8,13,u,u:FOR i=1 TO 100:PAPER 0:CLS:PAPER 1:CLS:NEXT:PAPER 1:WINDOW 8,13,3,u:PRINT CHR$(11):WINDOW 1,20,1,25:score=score+100 
+990 IF rr=1 THEN 1010
+1000 d=d2:g=11:u=1:GOTO 690 
+1010 IF u=3 THEN 1020 ELSE GOTO 1000  
+1020 CLS:LOCATE 6,12:PEN 0:PRINT"GAME  OVER" 
+1040 IF k=4 THEN k=0
+1050 IF INKEY(fe)<>0 THEN 1050 ELSE CLS
+1060 CLEAR INPUT:FOR i=1 TO 5:LOCATE 8,i+5:PEN 0:PRINT hijo$(i);:PEN 2:PRINT USING"#####";hijo(i)::NEXT     
+1070 hj=0
+1080 IF score>=hijo(5) THEN LOCATE 8,20:PRINT"MOYEN!!":hj=5
+1090 IF score>=hijo(4) THEN LOCATE 8,20:PRINT"BIEN!!":hj=4:hijo(5)=hijo(4):hijo$(5)=hijo$(4)
+1100 IF score>=hijo(3) THEN LOCATE 8,20:PRINT"BRAVO!!":hj=3:hijo(4)=hijo(3):hijo$(4)=hijo$(3)
+1110 IF score>=hijo(2) THEN LOCATE 8,20:PRINT"SUPER!!":hj=2:hijo(3)=hijo(2):hijo$(3)=hijo$(2)
+1120 IF score>=hijo(1) THEN LOCATE 4,20:PRINT"FELICITATION!!":hj=1:hijo(2)=hijo(1):hijo$(2)=hijo$(1)
+1130 IF hj=0 THEN CALL &BB06:FOR i=0 TO 15:INK i,0:NEXT:GOTO 240
+1140 hijo(hj)=score
+1150 LOCATE 9,15:PRINT"AAA":PEN 0:SPEED KEY 255,255
+1160 i=1:lettre(1)=1:lettre(2)=1:lettre(3)=1:     
+1170 CLEAR INPUT:FOR ii=1 TO 100:NEXT:IF INKEY(ga)=0 THEN 1210   
+1180 IF INKEY(dr)=0 THEN 1240       
+1190 CLEAR INPUT:IF INKEY(fe)=0 THEN 1270 
+1200 CLEAR INPUT:LOCATE 8+i,15:PRINT CHR$(64+lettre(i)):GOTO 1170    
+1210 lettre(i)=lettre(i)-1 
+1220 IF lettre(i)=0 THEN lettre(i)=26
+1230 LOCATE 8+i,15:PRINT CHR$(64+lettre(i)):GOTO 1170 
+1240 lettre(i)=lettre(i)+1 
+1250 IF lettre(i)=27 THEN lettre(i)=1
+1260 LOCATE 8+i,15:PRINT CHR$(64+lettre(i)):GOTO 1170    
+1270 FOR uu=1 TO 500:NEXT:i=i+1
+1280 IF i=4 THEN 2000
+1290 GOTO 1200
+2000 score=0:hijo$(hj)=CHR$(64+lettre(1))+CHR$(64+lettre(2))+CHR$(64+lettre(3)):CLEAR INPUT:FOR i=1 TO 5:LOCATE 8,i+5:PEN 0:PRINT hijo$(i);:PEN 2:PRINT USING"#####";hijo(i)::NEXT:CALL &BB06:FOR i=0 TO 15:INK i,0:NEXT
+2010 erreur=2:OPENOUT"clever.sav":WRITE #9,"~TESTprotec~":FOR i=1 TO 5:WRITE #9,hijo(i),hijo$(i):NEXT:CLOSEOUT 
+2020 erreur=0:GOTO 240
+10000 PAPER 0:PEN 1:INK 1,0:INK 0,26:BORDER 26:IF erreur=1 THEN MODE 0:CLOSEIN:PRINT "**~Il y a une erreur de lecture ,veuil- lez remettre la dis-quette CLEVER BALL  dans  le lecteur et enfoncer une touche.Merci~**":CALL &BB06:PEN 0:BORDER 0:RESUME
+10010 IF erreur=2 THEN MODE 0:CLOSEOUT:PRINT "**~Il y a une erreurde lecture ,veuillezremettre la disquet-te CLEVER BALL dans le lecteur ,enlever sa protection et en-foncer une touche . Merci~**":CALL &BB06:PEN 0:BORDER 0:RESUME
+10020 PRINT CHR$(7):CALL 0
+20000 FOR i=1 TO 5:LOCATE 8,i+5:PEN 0:PRINT hijo$(i);:PEN 2:PRINT USING"#####";hijo(i)::NEXT:FOR i=1 TO 4000:NEXT:FOR i=0 TO 15:INK i,0:NEXT:CLS:GOTO 240

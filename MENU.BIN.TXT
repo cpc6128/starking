@@ -1,0 +1,53 @@
+10 ON ERROR GOTO 280
+20 GOSUB 290
+30 OUT &BC00,1:OUT &BD00,0
+40 POKE &BE78,255:POKE &BE66,1:POKE &BDEE,&C9
+50 MODE 1:PEN 1:INK 0,0:PAPER 0:BORDER 3:INK 1,0:INK 2,15:INK 3,0:LOCATE 10,1:PEN 3:PRINT "~Compile DIMENSSION~"
+60 LOCATE 10,2:PRINT  "____________________":PEN 1
+70 DATA "STARKING 1","STAR.prg","STARKING 2","presente.dim","STARKING 3","starname.prg","BASE DE DONNEE","data","LOADERDISC","loader","ASSEMBLEUR Z80","z80","CLEVERBALL","clever"
+80 FOR I=1 TO 7:READ A$(I),f$(i):IF I=1 THEN LOCATE (40-LEN(A$(I)))/2,5+I*2:PRINT "";A$(I);"":ELSE LOCATE (40-LEN(A$(I)))/2,5+I*2:PRINT A$(I)
+90 NEXT:I=1
+100 PEN 3 :LOCATE 1,23:PRINT "Choose option with ";CHR$(240);" & ";CHR$(241);" and press space";:PEN 1 
+110 INK 1,11:INK 3,8:FOR ii=0 TO 40 :OUT &BC00,1:OUT &BD00,ii:FOR u=1 TO 30:NEXT:NEXT
+120 GOSUB 450:IF INKEY(2)=0 THEN 160
+130 IF INKEY(0)=0 THEN 190
+140 IF INKEY(47)=0 THEN 230 
+150 GOTO 120
+160 LOCATE (40-LEN(A$(I)))/2,5+I*2:PRINT A$(I)
+170 IF I=7 THEN I=1 ELSE I=I+1 
+180 LOCATE (40-LEN(A$(I)))/2,5+I*2:PRINT "";A$(I);"":GOTO 220
+190 LOCATE (40-LEN(A$(I)))/2,5+I*2:PRINT A$(I)
+200 IF I=1 THEN I=7 ELSE I=I-1 
+210 LOCATE (40-LEN(A$(I)))/2,5+I*2:PRINT "";A$(I);"":GOTO 220
+220 GOTO 120
+230 FOR ii=40 TO 0 STEP -1:OUT &BC00,1:OUT &BD00,ii:FOR u=1 TO 10:NEXT:NEXT:CLS:LOCATE (40-LEN(A$(I)))/2,9:PRINT A$(I) 
+240 s$="is loading":LOCATE (40-LEN(s$))/2,10:PRINT s$ 
+250 FOR ii=0 TO 40 :OUT &BC00,1:OUT &BD00,ii:FOR u=1 TO 10:NEXT:NEXT 
+260 
+65519 F:WHILE 
+6644 RESUME>TIME:WEND:FOR ii=40 TO 0 STEP -1:OUT &BC00,1:OUT &BD00,ii:FOR u=1 TO 10:NEXT:NEXT:CLS:INK 0,2:BORDER 2:CLEAR INPUT:OUT &BC00,1:OUT &BD00,40:PEN 0
+261 DATA 33,10,16,223,7,16,201,13,198,7,35,0,0,0,0,255,10,0,3
+262 FOR F=0 TO 18:READ A:POKE &1000+F,A:NEXT:CALL &1000
+270 RUN f$(i)  
+280 RESUME
+290 DIM h$(14):g=0:e=0 
+300 h$(0)="                                            "  
+310 h$(1)=" . . . . . . . . . . . . . . . . . . . ."
+320 h$(2)="Welcome sur la Compile DIMENSSION.Au menu: Starking I ,II et III,l'assembleur GENERALE Z80 ,Loaderdisc,et l'agenda DATA pour vous servir.Mais avant de continuer je vais t'expliquer l'utilisation de Loaderdisc:ce logiciel te permet d"
+330 h$(3)="e visualiser tes disquettes de format standard ,c'est a dire soit en format DATA ou en format VENDOR.Il a aussi 2 modes:soit le mode automatique (visualise ton disc de la piste ~debut~ a la piste ~fin~ ) ou le mode manuel qui permet de regarder
+340 h$(4)=" la disquette avec les fleches (haut=-,bas=+); tu as aussi la possibilite de sauvegarder l'ecran avec la touche ~S~ (apres avoir insere dans le lecteur une disquette travail)."
+350 h$(5)=" Pour l'agenda DATA ,au debut ,on te demande l'heure ,minute ,seconde inscris les et alors tu auras en haut de l'ecran une horloge avec l'heure que tu as mis .Sinon Generale Z80 ,l'assembleur qui aurait du etre tres pratique ,ben il fon"
+360 h$(6)="ctionne mal! Lent a cause du Basic et bourre d'erreur de copie !! (il comprend pas mal de mots :test ~TS~,sauvegarder en ASCII ~SV~,assemble ~AS~ ,list ~LT~ ,il a une commande PRINT ~PT~ ,GOTO ~DR~,etc...  "
+370 h$(7)="enture jamais fini ,mais il comprend quelques mots et a 2 etages.Sinon, STARKING 1 ,il marche tres bien a part le graphisme un peu nul! Mais Starking 2 est plus soigne ,mais a cause du basic il est un peu lent ." 
+380 h$(8)="Cleverball :le but est de faire le plus de ligne ;pour qu'une ligne soit bonne tu dois disposer les pierres les une contre l'autre mais sans que deux identiques se touchent sur la meme ligne et sous celle-ci .Dans le niveau 2,c'est pareil sauf"
+390 h$(9)=" qu'il ne faut pas la meme dessus ."
+395 h$(10)="Starking 3:Mission sauver la planete Yula de l'ennemi.Pour cela un spacio-helico et des missiles.Ce jeu est ~tres~ difficile (je ne vais meme pas jusqu'a la fin ...mais il est possible...)"
+400 h$(11)=" Bon ,je te laisse choisir mais avant, une petite histoire :~ Connais-tu l'histoire de Paf le chien ? Ben,un jour Paf le chien traverse la rue est paf le chien ...(nul!!)~   Bon ben salut ! Et bon jeu . . . . "
+410 h$(12)="   ~(p)1992 DIMENSSION SATURN Informatique~   "
+420 h$(13)=". . . . . . . . . . . . . . . . . . . . . ."
+430 h$(14)=" "
+440 RETURN
+450 g=g+1:b$=MID$(h$(e),g,40):IF LEN(h$)<40 THEN c$=LEFT$(h$(e+1),40-LEN(b$)) ELSE c$=""   
+460 IF LEN(b$)=0 THEN e=e+1:g=0:GOTO 450
+470 IF e=13 THEN e=1:GOTO 450 
+480 PEN 2:LOCATE 1,25:PRINT b$;c$;:PEN 1:RETURN

@@ -1,0 +1,198 @@
+10 ùERA,"m:*.*"
+20 cc=0:ENV 1,1,-10,10,1,10,10,1,-10,10,1,10,10:fg=-1
+30 ZONE 1:ON ERROR GOTO 750:re=-1:EVERY 50,1 GOSUB 980:fi=1:EVERY 10,3 GOSUB 1750:EVERY 25,2 GOSUB 1730
+40 DEF FNcodage=ABS(ASC(MID$(code$,posi,1)) XOR ASC(MID$(result$,cv2,1)))+45
+50 DEF FNdecodage=ABS(ASC(MID$(code$,posi,1)) XOR ((ASC(MID$(result$,cv2,1))))-13)+32 
+60 KEY 159,"paper 0:pen 1:mode 2:ink 1,26:list"+CHR$(13):KEY DEF 68,1,159 
+70 PEN 1:PAPER 0:BORDER 0:INK 0,0:INK 1,13:INK 2,20:INK 3,26:GOTO 110
+80 PEN 1:LOCATE 1,1:PRINT "AJOUTER CHANGER EFFACER CHERCHER OPTION "
+90 LOCATE 1,24:PRINT "CREATION IMPRIMER SAUVEGARDER CHARGER   ";
+100 INK 1,13:RETURN 
+110 GOSUB 80:WINDOW 1,40,1,25:GOSUB 120:GOTO 150
+120 DATA A,1,1,C,9,1,E,17,1,H,26,1,O,34,1
+130 DATA R,2,24,I,10,24,S,19,24,G,35,24 
+140 CLOSEIN:CLOSEOUT:INK 1,13:RESTORE 120:PEN 2:FOR I=1 TO 9:READ LETTRE$,X,Y:LOCATE X,Y:PRINT "";LETTRE$;"":NEXT:RETURN 
+150 POKE &BE78,255:POKE &BE66,4
+160 PAPER 0:PEN 1:WINDOW 1,40,1,25:GOSUB 120:WINDOW 1,40,2,23:WINDOW#2,1,40,25,25:PEN#2,2:cd=0
+170 IF jj=-1 THEN re=-1:IF xx<>0 THEN LOCATE yy,xx:PEN 2:PRINT"";CHR$(180) 
+180 WHILE G$>"":G$=INKEY$:WEND:WHILE G$="":G$=INKEY$:WEND:op=INSTR("ACEHIOSGR",UPPER$(G$)):WINDOW 1,40,1,25:GOSUB 80:WINDOW 1,40,2,23:IF op=re THEN RETURN ELSE DC=0:ON op GOTO 190,430,360,520,270,1560,650,1210,1100:GOTO 160
+190 GOSUB 1080:CLS:PEN 2:PAPER 0:PRINT "-------Ajouter une nouvelle fiche-------"   
+200 PEN 1:PRINT "Enregistrement no";fg+1:fg=fg+1:PEN 2:IF fg>nombnom THEN PRINT#2,"Il n'y a plus de fiche libre.":SOUND 1,150,10:fg=fg-1:GOTO 1090 
+210 IF fg=0 THEN fg=1
+220 FOR zx=1 TO nombcham:PEN 3:PRINT champ$(zx);:PEN 2:fini=250:jj=1:GOSUB 1370:nom$(zx,fg)=phrase2$:NEXT:GOTO 200 
+230 GOSUB 1080:WINDOW 9,34,5,16:PAPER 3:CLS:WINDOW 8,33,4,15:PAPER 1:CLS:PEN 2
+240 LOCATE 3,1:PRINT"Changer les rubriques":PEN 3
+250 FOR i=1 TO nombcham
+260 PRINT CHR$(&14);"champ";i;":";champ$(i);:fin=30:GOSUB 850:champ$(i)=phrase$:NEXT:PAPER 0:LOAD"m:ecran":GOTO 160
+270 GOSUB 1080:SAVE"m:ecran",b,&C000,&4000:WINDOW 9,34,5,14:PAPER 3:CLS:WINDOW 8,33,4,13:PAPER 1:CLS:PEN 2:PRINT "   Imprimer les fiches":PEN 2
+280 PEN 3:PRINT:PRINT "Inprimante branchee (O/N)?";:fin=2:GOSUB 850:IF UPPER$(phrase$)<>"O" THEN st=0 ELSE st=0 
+290 PRINT "Debut edition:";:fin=3:GOSUB 850:debut=VAL(phrase$):PRINT "Fin edition:";:fin=3:GOSUB 850:fifi=VAL(phrase$):IF debut<1 OR fifi>fg THEN PRINT "Impossible";:fin=0:GOSUB 850:LOAD"m:ecran":GOTO 160
+300 IF fifi=0 THEN fifi=fg
+310 IF st=0 THEN MODE 2:PEN 1:PAPER 0
+320 WINDOW 1,80,2,25:CLS:PRINT #st,"Agenda Convertible :liste des fiches.":PRINT #st:PRINT #st:FOR i=debut TO fifi:PRINT #st,"Fiche no";i:FOR ii=1 TO nombcham:PRINT #st,champ$(ii);">";nom$(ii,i):IF INKEY(9)=0 THEN PRINT #st,"**Stop**":GOTO 340
+330 NEXT:PRINT #st,STRING$(39,"-"):NEXT:PRINT"**Fin**"
+340 IF st=0 THEN MODE 1
+350 LOAD"m:ecran":GOTO 160
+360 GOSUB 1080:CLS:PEN 2:PRINT "-------------Effacer une fiche----------"
+370 jj=3:PRINT "Effacer quelle fiche ?:";:fini=5:GOSUB 1370:nnn=VAL(phrase2$):IF nnn<>0 THEN 390:ELSE PRINT "Tout le fichier ?":fini=1:GOSUB 1370:IF UPPER$(phrase2$)<>"O" THEN re=-1:GOTO 160 
+380  FOR r=1 TO nombcham:FOR zx=1 TO fg:nom$(r,zx)="":NEXT:NEXT:fg=0:re=-1:GOTO 160
+390 IF nnn<1 THEN 370 ELSE IF nnn>nombnom THEN GOSUB 370 ELSE IF nnn>fg THEN GOSUB 370
+400 FOR zx=1 TO nombcham:PEN 1:PRINT champ$(zx);">";:PEN 2:PRINT nom$(zx,nnn):NEXT:PRINT "Ok! Pour confirmer l'effacement (O/N)?":fini=1:GOSUB 1370:IF UPPER$(phrase2$)<>"O" THEN PRINT"Pas d'effacage":re=-1:GOTO 160 
+410 FOR ii=nnn TO fg-1:FOR iii=1 TO nombcham:nom$(iii,ii)=nom$(iii,ii+1):NEXT:NEXT:fg=fg-1:PRINT "Une autre (O/N)?":fini=1:GOSUB 1370:IF UPPER$(phrase2$)<>"O" THEN jj=-1 :GOTO 1070 
+420 GOTO 360
+430 GOSUB 1080:CLS:PEN 2:PRINT "-----------Changer une fiche------------"
+440 PRINT "Changer quelle fiche ?:";:fini=5:re=2:jj=2:GOSUB 1370:nnn=VAL(phrase2$)
+450 IF nnn<1 THEN PRINT"fin";:re=-1:GOTO 160
+460 IF nnn>fg THEN PRINT"IMPOSSIBLE";:re=-1:GOTO 160
+470 FOR zx=1 TO nombcham:PRINT champ$(zx);">";nom$(zx,nnn):NEXT
+480 PRINT "Ok Pour changer (O/N) ?";:fini=1:GOSUB 1370:bb$=phrase2$
+490 IF UPPER$(bb$)<>"O" THEN PRINT"Pas de changement":re=-1:GOTO 1070
+500 FOR zx=1 TO nombcham:DC=1:fini=250:PEN 1:PRINT CHR$(&14);"`";champ$(zx):PEN 2:PRINT nom$(zx,nnn);:FOR i=1 TO LEN(nom$(zx,nnn)):PRINT"";:NEXT:GOSUB 1370:DC=0:nom$(zx,nnn)=phrase2$:NEXT
+510 GOTO 430
+520 GOSUB 1080:CLS :PEN 2:PAPER 0:PRINT "-----------Chercher une fiche-----------"
+530 LOCATE 3,4:PRINT"Pour tout lire appuyer sur ENTER":LOCATE 1,6:PRINT "Lettres a rechercher:";:jj=4:fini=250:GOSUB 1370:q$=UPPER$(phrase2$):me=1
+540 PRINT "je cherche.":FOR se=me TO fg:FOR ii=1 TO nombcham:IF INSTR(UPPER$(nom$(ii,se)),q$) THEN 560
+550 NEXT ii:NEXT:PRINT"Recherche terminee.":re=-1:GOTO 1070
+560 PEN 1:PRINT:PRINT "Fiche n'";se:PRINT:FOR yy=1 TO nombcham:PEN 1:PRINT champ$(yy);":";:PEN 2:PRINT nom$(yy,se):NEXT:PEN 1:PRINT"Enfoncer [ENTER] pour continuer";:fini=0:GOSUB 1370:me=se+1:GOTO 540
+570 GOSUB 1080
+580 WINDOW 9,34,5,16:PAPER 3:CLS:WINDOW 8,33,4,15:PAPER 1:CLS:PEN 2
+590 PRINT "-----Trier les fiches-----"
+600 LOCATE 1,3:PRINT"Quelle rubrique (1-";nombcham;") ?":fin=2:GOSUB 850:tt=VAL(phrase$):IF tt>nombcham OR tt=0 THEN 630 ELSE LOCATE 7,7:PRINT"TRIAGE AVEC LA RUBRIQUE";tt;:LOCATE 1,9:PRINT"    VEUILLEZ PATIENTER    ";
+610 jj=-1:d1=fg:s1=d1:WHILE s1>1:s1=s1/2:s2=d1-s1:fl=1:WHILE fl=1:fl=0:FOR s3=1 TO s2:s4=s1+s3:IF UPPER$(nom$(tt,s3))>UPPER$(nom$(tt,s4)) THEN GOSUB 640
+620 NEXT s3:WEND:WEND:PRINT"Operations terminees":SOUND 1,200,5:PRINT "Enfoncer la touche ENTER";:fin=0:GOSUB 850
+630 LOAD"m:ecran":GOTO 160
+640 FOR yu=1 TO nombcham:s1$=nom$(yu,s3):nom$(yu,s3)=nom$(yu,s4):nom$(yu,s4)=s1$:NEXT:fl=1:RETURN 
+650 GOSUB 1080:SAVE"m:ecran",b,&C000,&4000:cd=1:WINDOW 4,38,5,20:PAPER 3:CLS:WINDOW 3,37,4,19:PAPER 1:PEN 2:CLS  
+660 code2=0
+670 GOSUB 1080:ero=2:LOCATE 1,4:PRINT"Placer dans le lecteur une disquet-te pour sauvegarder le fichier":PRINT:PRINT"Puis,entrez le nom du fichier :":PRINT:PRINT "Nom: ";:fin=8:GOSUB 850:ff$=phrase$:PRINT"Code";:fin=4:GOSUB 850:code$=phrase$:GOSUB 1700
+680 CLOSEOUT:OPENOUT ff$:LOCATE 1,11:PRINT "nombre de fiches enregistrees:"
+690 GOSUB 1700:WRITE #9,code2,fg,nombcham,nombnom:posi=1:FOR i=1 TO fg:LOCATE 31,11:PRINT USING "####";i
+700 FOR ii=1 TO nombcham:result$=nom$(ii,i):GOSUB 1960:IF code$="" THEN 720 ELSE k$="":FOR cv2=1 TO LEN(result$):k$=k$+CHR$(FNcodage):posi=posi+1:IF posi=5 THEN posi=1 
+710 NEXT:result$=k$:
+720 WRITE #9,result$:NEXT:NEXT:FOR ii=1 TO nombcham:result$=champ$(ii):IF code$="" THEN 740 ELSE k$="":FOR cv2=1 TO LEN(result$):k$=k$+CHR$(FNcodage):posi=posi+1:IF posi=5 THEN posi=1
+730 NEXT:result$=k$
+740 WRITE #9,result$:NEXT:WINDOW 1,40,1,25:PEN 1:PAPER 0:CLOSEOUT:dc=0:LOAD"m:ecran":GOTO 160 
+750 ON ERROR GOTO 750:CLS#2:SOUND 1,200,10 
+760 IF ERR<>32 THEN PRINT #2,"
+Erreur, identification impossible.":GOTO 770 :ELSE PRINT #2,"Erreur lecteur, type ";DERR
+770 SAVE"m:ecran2",b,&C000,&4000:WINDOW#3,13,28,7,9:PAPER#3,3:CLS#3:WINDOW#3,12,27,6,8:PAPER#3,2:CLS#3:PEN#3,1:PRINT#3,"Recommencer?":PRINT#3,"Ignorer?":PRINT#3,"Abandonner ?"; 
+780 inke$=INKEY$:IF inke$="" THEN 780
+790 IF inke$="a" OR inke$="A" THEN LOAD"m:ecran":ùERA,"m:ecran2.bin":IF dic=1 THEN MODE 1:RUN ELSE RESUME 160
+800 IF inke$="i" OR inke$="I" THEN LOAD"m:ecran2":ùERA,"m:ecran2.bin":RESUME NEXT
+810 IF INKEY(58)=128 THEN ùERA,"m:*.*"
+820 IF INKEY(50)=128 THEN RUN
+830 IF inke$="r" OR inke$="R" THEN LOAD"m:ecran2":ùERA,"m:ecran2.bin":RESUME 
+840 GOTO 780
+850 CLEAR INPUT:phrase$="":u=0
+860 l$=STRING$(255," "):PRINT "";
+870 PRINT h$;
+880 a$=INKEY$:PRINT "";h$;
+890 IF a$=CHR$(13) THEN GOTO 970
+900 IF INKEY(9)=0 THEN LOAD"m:ecran":GOTO 160
+910 IF a$="" THEN 880   
+920 IF ASC(a$)=127 THEN u=u-1:IF u=-1 THEN u=0:GOTO 880 ELSE PRINT"  ";:MID$(l$,u+1,1)=" ":GOTO 870
+930 IF ASC(a$)<32 OR ASC(a$)>126 THEN 880  
+940 IF u=fin THEN SOUND 1,200,15:GOTO 880  
+950 u=u+1:PRINT "";a$;  
+960 MID$(l$,u,1)=a$:GOTO 870
+970 PRINT".":phrase$=LEFT$(l$,u):CLEAR INPUT:RETURN
+980 sec=sec+1
+990 IF sec=60 THEN sec=0:minu=minu+1
+1000 IF minu=60 THEN minu=0:heu=heu+1
+1010 IF heu=24 THEN heu=0
+1020 IF alarme=1 AND minu=minua AND heu=heua AND sec<31 THEN SOUND 1,20,40,10,1
+1030 IF ok=1 THEN LOCATE 3,9:PRINT USING "##h##m##s /";heu;minu;sec;:mem=(FRE(" ")/1024):PRINT USING"Memoire:##ko";mem 
+1040 IF INKEY(51)=128 THEN PRINT #2,"";:PRINT #2,USING "##h##m##s";heu;minu;sec
+1050 RETURN
+1060 a$=INKEY$:IF a$="" THEN 1060 ELSE RETURN
+1070 PRINT"Operations terminees.":GOTO 160
+1080 IF cc=0 THEN SOUND 1,150,5:PRINT#2,"Il n'y a aucune fiche en memoire." ELSE RETURN 
+1090 GOTO 160
+1100 SAVE"m:ecran",b,&C000,&4000:WINDOW 9,34,5,14:PAPER 3:CLS:WINDOW 8,33,4,13:PAPER 1:CLS:PEN 2
+1110 LOCATE 10,1:PRINT"CREATION":PEN 3
+1120 LOCATE 1,3:PRINT "Nombre de fiches ?":fin=3:PEN 0:GOSUB 850:ttt1=VAL(phrase$)
+1130 IF ttt1=0 THEN PAPER 0:LOAD"m:ecran":GOTO 160
+1140 PEN 3:LOCATE 1,5:PRINT "Nombre de rubriques ?":PEN 0:fin=3:GOSUB 850:ttt3=VAL(phrase$)
+1150 IF ttt1>700 OR ttt3>50 OR ttt1<1 OR ttt3<1 THEN PEN 3:PRINT"Choix impossible";:fin=0:GOSUB 850:PAPER 0:LOAD"m:ecran":GOTO 160
+1160 IF cc=1 THEN ERASE champ$,nom$ 
+1170 nombnom=ttt1:nombcham=ttt3
+1180 fg=0:cc=1:DIM nom$(nombcham,nombnom),champ$(nombcham)
+1190 jj=-1:PAPER 0:LOAD"m:ecran":GOTO 160
+1200 PRINT#5,USING "Fiche:####";fg:RETURN      
+1210 SAVE"m:ecran",b,&C000,&4000:cd=1:WINDOW 2,40,5,20:PAPER 3:CLS:WINDOW 1,39,4,19:PAPER 1:CLS:PEN 2
+1220 ero=1:PRINT "Entrez le disc contenant votre fichier,":PRINT "puis entrez le nom du fichier:":PRINT"":fin=8:GOSUB 850
+1230 IF LEN(phrase$)=0 OR phrase$="" THEN LOAD"m:ecran":GOTO 160
+1240 code$="":CLOSEIN:OPENIN phrase$:INPUT #9,code:fi$=phrase$:IF code<>0 THEN PRINT"Fichier protege.Entrez le code d'accee:":fin=4:GOSUB 850:code$=phrase$:GOSUB 1700:IF code2<>code THEN LOAD"m:ecran":GOTO 160 
+1250 CLS:ON ERROR GOTO 750
+1260 dic=1:INPUT #9,fg,nombcham,nombnom:LOCATE 1,5:PRINT "<-Capacite->":PRINT "Rubriques:";nombcham:PRINT"fiches:";nombnom:PRINT"Utilisees:";fg:IF cc=1 THEN ERASE nom$,champ$
+1270 DIM nom$(nombcham,nombnom),champ$(nombcham):LOCATE 1,10:PRINT "Nombre de fiches chargees  :"
+1280 LOCATE 1,1:PRINT"Fichier:";"";fi$;"":IF code$<>"" THEN PRINT "   Code:";"";code$;""
+1290 posi=1:FOR i=1 TO fg:LOCATE 32,10:PRINT "";USING "####";i:PRINT ""
+1300 FOR ii=1 TO nombcham:INPUT #9,result$:IF code$="" THEN 1320 ELSE k$="":FOR cv2=1 TO LEN(result$):k$=k$+CHR$(FNdecodage):posi=posi+1:IF posi=5 THEN posi=1
+1310 NEXT:result$=k$
+1320 nom$(ii,i)=result$:NEXT:NEXT:
+1330 FOR ii=1 TO nombcham:INPUT #9,result$:IF code$="" THEN 1350 ELSE k$="":FOR cv2=1 TO LEN(result$):k$=k$+CHR$(FNdecodage):posi=posi+1:IF posi=5 THEN posi=1
+1340 NEXT:result$=k$
+1350 champ$(ii)=result$:NEXT:CLOSEIN:cc=1:cd=0
+1360 dic=0:LOAD"m:ecran":GOTO 160
+1370 CLEAR INPUT:uu=0:IF jj<>2 OR dc=0 THEN ll$=STRING$(255," "):ende=0:ELSE ll$=nom$(zx,nnn)+STRING$(255-(LEN(nom$(zx,nnn)))," "):ende=LEN(nom$(zx,nnn)) 
+1380 IF fini=0 THEN PRINT " ";:ELSE IF jj<>2 OR dc=0 THEN PRINT CHR$(&14);">";:ELSE PRINT "";
+1390 PRINT "	";
+1400 aa$=INKEY$:PRINT "";hh$;MID$(ll$,uu+1,1);hh$;
+1410 IF uu>ende THEN ende=uu
+1420 IF aa$=CHR$(13) THEN GOTO 1540
+1430 IF INKEY(9)=0 THEN re=jj:IF jj=1 THEN fg=fg-1:yy=POS(#0):xx=VPOS(#0):PRINT "";CHR$(227):GOSUB 160:LOCATE yy,xx:PEN 2:PAPER 0:fg=fg+1:PRINT "";h$;:ELSE yy=POS(#0):xx=VPOS(#0):PRINT "";CHR$(227):GOSUB 160:LOCATE yy,xx:PEN 2:PAPER 0:PRINT "";h$;
+1440 IF fini=0 THEN 1400
+1450 IF aa$="" THEN 1400 
+1460 IF ASC(aa$)=127 THEN 1810 
+1470 IF ASC(aa$)=242 THEN 1840
+1480 IF ASC(aa$)=243 THEN 1860
+1490 IF ASC(aa$)<32 OR ASC(aa$)>126 THEN SOUND 1,200,10:GOTO 1400
+1500 IF uu=fini THEN SOUND 1,200,15:GOTO 1400
+1510 IF uu>250 THEN 1400
+1520 uu=uu+1:PRINT "";aa$;
+1530 MID$(ll$,uu,1)=aa$:GOTO 1390
+1540 PRINT"";MID$(ll$,uu+1,1):phrase2$=LEFT$(ll$,ende):FOR i=LEN(phrase2$) TO 1 STEP -1:IF MID$(phrase2$,i,1)=" " THEN phrase2$=LEFT$(phrase2$,i-1):NEXT
+1550 RETURN
+1560 SAVE"m:ecran",b,&C000,&4000:WINDOW 9,34,5,17:PAPER 3:CLS:WINDOW 8,33,4,16:PAPER 1:CLS:PEN 2  
+1570 LOCATE 10,1:PRINT" OPTION":PEN 3
+1580 LOCATE 2,3:PRINT " Changer les rubriques"
+1590 LOCATE 2,5:PRINT " Trier les fiches"
+1600 'LOCATE 3,9:PRINT USING "##h##m##s /";heu;minu;sec;:mem=(FRE(" ")/1024):PRINT USING"Memoire:##ko";mem
+1610 LOCATE 2,7:PRINT " Regler l'horloge"
+1620 IF fg<>-1 THEN LOCATE 2,11:PRINT USING "###/### fiches utilisees";fg;nombnom
+1630 ok=1:inkk$=INKEY$:IF inkk$="" THEN 1630
+1640 ok=0
+1650 IF inkk$="C" OR inkk$="c" THEN LOAD"m:ecran":GOTO 230 
+1660 IF inkk$="R" OR inkk$="r" THEN LOAD"m:ecran":GOTO 1880
+1670 IF inkk$="T" OR inkk$="t" THEN LOAD"m:ecran":GOTO 570
+1680 IF INKEY(9)=0 THEN LOAD"m:ecran":GOTO 160
+1690 GOTO 1630
+1700 IF code$="" THEN RETURN
+1710 i=0:FOR ie=1 TO 4 :zx$=MID$(code$,ie,1):i=i+(ASC(zx$))*ie:NEXT 
+1720 i=(i/1250)*63:code2=CINT(i):RETURN  
+1730 IF h$=CHR$(32) THEN h$=CHR$(143) ELSE h$=CHR$(32)
+1740 RETURN
+1750 IF fi=2 THEN hh$="":fi=fi+1 
+1760 IF fi=1 THEN hh$="":fi=fi+1
+1770 IF fi=3 THEN fi=1  
+1780 IF cd=1 THEN OUT 1,1:ELSE OUT 0,0
+1790 IF INKEY(47)=128 THEN re=-1
+1800 RETURN
+1810 uu=uu-1:IF uu<0 THEN SOUND 1,400,10:uu=uu+1 :PRINT"";:GOTO 1390:ELSE uu=uu+1
+1820 PRINT "";MID$(ll$,uu+1,1);:PRINT "";" ";"";:MID$(ll$,uu,1)=" ":uu=uu-1:GOTO 1390
+1830 PRINT "";" ";:PRINT "";MID$(ll$,uu+1,1);"";:MID$(ll$,uu,1)=" ":uu=uu-1:GOTO 1390
+1840 uu=uu-1:IF uu<0 THEN SOUND 1,400,10:uu=uu+1 :PRINT"";:GOTO 1390:ELSE uu=uu+1
+1850 PRINT "";MID$(ll$,uu+1,1);:PRINT "";MID$(ll$,uu,1);"";:uu=uu-1:GOTO 1390
+1860 uu=uu+1:IF uu>=ende+1 THEN SOUND 1,400,10:uu=ende:PRINT "";:GOTO 1390
+1870 PRINT "";MID$(ll$,uu,1);:GOTO 1390
+1880 WINDOW 9,34,5,14:PAPER 3:CLS:WINDOW 8,33,4,13:PAPER 1:CLS:PEN 2 
+1890 LOCATE 10,1:PRINT"HORLOGE"
+1900 PEN 3:LOCATE 2,3:PRINT"   Time:   h   mn   s":PEN 0:LOCATE 10,3:fin=2:GOSUB 850:ttt1=VAL(phrase$):IF ttt1<0 OR ttt1>23 THEN 1900 ELSE LOCATE 14,3:GOSUB 850:ttt2=VAL(phrase$):IF ttt2<0 OR ttt2>59 THEN 1900
+1910 LOCATE 19,3:GOSUB 850:ttt3=VAL(phrase$):IF ttt3<0 OR ttt3>59 THEN 1900 ELSE sec=ttt3:minu=ttt2:heu=ttt1 
+1920 PEN 3:LOCATE 2,5:PRINT"Voulez-vous l'alarme ?";:PEN 0:fin=1:GOSUB 850
+1930 IF phrase$="o" OR phrase$="O" THEN 1940 ELSE LOAD"m:ecran":alarme=0:GOTO 160
+1940 PEN 3:LOCATE 3,7:PRINT" Alarme:   h   mn":PEN 0:LOCATE 11,7:fin=2:GOSUB 850:ttt1=VAL(phrase$):IF ttt1<0 OR ttt1>23 THEN 1940 ELSE LOCATE 15,7:GOSUB 850:ttt2=VAL(phrase$):IF ttt2<0 OR ttt2>59 THEN 1940
+1950 heua=ttt1:minua=ttt2:seca=ttt3:alarme=1:LOAD"m:ecran":GOTO 160
+1960 FOR iu=LEN(result$) TO 1 STEP -1:IF MID$(result$,iu,1)=" " THEN result$=LEFT$(result$,iu-1):NEXT
+1970 RETURN
